@@ -1,8 +1,9 @@
 import { IResponseSpeedTest } from './../../../domain/usecases/IResponseSpeedTest';
 import { success, serverError } from "../../helpers/http/http-helper";
 import { HttpResponse } from "../../protocols/http";
+import { Controller } from '../../protocols/controller';
 
-export class SpeedTestController {
+export class SpeedTestController implements Controller {
     constructor(private readonly speedTest: IResponseSpeedTest) {
         this.speedTest = speedTest
     }
