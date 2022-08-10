@@ -1,24 +1,19 @@
-// import { UniversalSpeedtest, SpeedUnits } from "universal-speedtest";
-
-import { success } from "../../helpers/http/http-helper";
+import { IResponseSpeedTest } from './../../../domain/usecases/IResponseSpeedTest';
+import { success, serverError } from "../../helpers/http/http-helper";
 import { HttpResponse } from "../../protocols/http";
 
-// const universalSpeedtest = new UniversalSpeedtest({
-//     measureUpload: true,
-//     // uploadUnit: SpeedUnits.MBps,
-//     downloadUnit: SpeedUnits.MBps
-// });
-
-// universalSpeedtest.runSpeedtestNet().then(result => {
-//     console.log(`Ping: ${result.ping} ms`);
-//     console.log(`Download speed: ${result.downloadSpeed} MBps`);
-//     console.log(`Upload speed: ${result.uploadSpeed} Mbps`);
-// }).catch(e => {
-//     console.error(e.message);
-// });
-
 export class SpeedTestController {
+    constructor(private readonly speedTest: IResponseSpeedTest) {
+        this.speedTest = speedTest
+    }
     async handle(): Promise<HttpResponse> {
-        return success(null)
+        try {
+            const responseRunTest = await this.speedTest.run()
+
+            return success(responseRunTest)
+        } catch (error) {
+            return serverError(error)
+        }
+
     }
 }
