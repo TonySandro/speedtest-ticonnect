@@ -1,4 +1,16 @@
+import { serverError } from './../../helpers/http/http-helper';
+import { ResponseSpeedTest } from '../../../domain/models/responseSpeedTest';
 import { SpeedTestController } from './speed-test-controller';
+
+const makeSpeedTest = () => {
+    class RunTest  {
+        async run(): Promise<ResponseSpeedTest> {
+            return new Promise(resolve => resolve(makeFakeResponse()))
+
+        }
+    }
+    return new RunTest()
+}
 
 const makeFakeResponse = () => ({
     client: { ip: '201.140.254.81', isp: 'Giganet Provedor De Internet Ltda' },
@@ -17,9 +29,11 @@ const makeFakeResponse = () => ({
 })
 
 const makeSut = () => {
-    const sut = new SpeedTestController()
+    const speedTest = makeSpeedTest()
+    const sut = new SpeedTestController(speedTest)
     return {
-        sut
+        sut,
+        speedTest
     }
 }
 
@@ -30,5 +44,15 @@ describe('Speed Test Controller', () => {
         const httpResponse = await sut.handle()
         expect(httpResponse.statusCode).toBe(200)
     })
+    
+    test('Should return 500 if speedTest throws', async () => {
+        const { sut, speedTest } = makeSut()
+        jest.spyOn(speedTest, 'run').mockImplementationOnce(async () => {
+            return new Promise((resolve, reject) => reject(new Error()))
+        })
 
+        const httpResponse = await sut.handle()
+        expect(httpResponse.statusCode).toBe(500)
+        expect(httpResponse).toEqual(serverError(new Error()))
+    })
 })
