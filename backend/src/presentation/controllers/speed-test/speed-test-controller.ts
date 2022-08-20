@@ -9,8 +9,10 @@ export class SpeedTestController implements Controller {
     }
     async handle(): Promise<HttpResponse> {
         try {
+            console.log("Test running")
             const responseRunTest = await this.speedTest.run()
 
+            console.log(responseRunTest)
             return success(responseRunTest)
         } catch (error) {
             return serverError(error)
