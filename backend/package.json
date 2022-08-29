@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/main/server.js",
+    "start": "nodemon -r dotenv/config src/app.js",
     "dev": "nodemon src/main/server.ts",
     "build": "rimraf dist && tsc ",
     "test": "jest --passWithNoTests --noStackTrace --runInBand",
