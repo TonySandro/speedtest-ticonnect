@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  backend:
+    build: "./backend"
+    image: backend-speedtest
+    container_name: speedtest-backend
+    ports: 
+      - "5050:5050"
+    restart: always
+    volumes:
+      - ./backend:/usr/back
+
+  
